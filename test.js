@@ -1,8 +1,11 @@
 var question = [
     [1, 1, 1, 1, 1],
-    [0, 0, 1, 1, 1],
-    [0, 1, 1, 1, 1],
-    [0, 1, 1, 1, 9]
+    [1, 1, 1, 1, 1],
+    [0, 0, 0, 1, 1],
+    [1, 1, 1, 1, 1],
+    [1, 1, 1, 0, 1],
+    [1, 1, 1, 1, 1],
+    [1, 1, 1, 1, 9],
 ];
 
 // güzel örnek
@@ -68,14 +71,15 @@ const nextStep = (rowIndex, columnIndex, step) => {
         if (rowIndex - 1 >= 0) {
             if (isExist(rowIndex - 1, columnIndex)) { // parent exist
                 if (reset) {
-                    path.push([rowIndex + 1, columnIndex], [rowIndex, columnIndex]);
-
+                    // path.push([rowIndex + 1, columnIndex], [rowIndex, columnIndex]);
+                    let index = path.findIndex(item => item[0] === rowIndex && item[1] === columnIndex);
+                    path = path.splice(0, index + 1);
                     // path.push([rowIndex, columnIndex]);
                 }
                 path.push([rowIndex - 1, columnIndex]);
                 step = nextStep(rowIndex - 1, columnIndex, ++step);
             } else {
-                path = [];
+
                 reset = true;
             }
         } else {
