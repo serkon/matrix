@@ -1,9 +1,25 @@
 var question = [
-    [1, 0, 1, 0, 1],
-    [1, 0, 1, 1, 1],
     [1, 1, 1, 1, 1],
-    [1, 1, 1, 9, 0]
+    [0, 0, 1, 1, 1],
+    [0, 1, 1, 1, 1],
+    [0, 1, 1, 1, 9]
 ];
+
+// güzel örnek
+// var question = [
+//     [1, 0, 1, 1, 1],
+//     [1, 1, 1, 1, 1],
+//     [0, 0, 1, 0, 1],
+//     [1, 0, 1, 1, 9]
+// ];
+
+// hata var
+// var question = [
+//     [1, 1, 1, 1, 1],
+//     [1, 1, 0, 1, 1],
+//     [0, 0, 1, 1, 1],
+//     [1, 1, 1, 1, 9]
+// ];
 
 // var question = [
 //   [1, 0, 1, 1, 1],
@@ -25,41 +41,52 @@ const selected = question.slice(0).reduce((r, row, rowIndex, arr) => {
 }, {});
 const cleared = question.map(row => row.reduce((r, v, i) => v >= 1 ? (r.push(i), r) : r, []));
 let matched = false;
-const nextStep = (rowIndex, columnIndex, step, path) => {
-    console.log(rowIndex, columnIndex, step, path);
+let path = [];
+let reset = false;
+const nextStep = (rowIndex, columnIndex, step) => {
+    console.log(rowIndex, columnIndex, step);
     if (rowIndex === 0 && columnIndex === 0) {
         matched = true;
         return step;
     }
     if (!matched) {
-        if (rowIndex - 1 >= 0) {
-            if (isExist(rowIndex - 1, columnIndex)) { // parent exist
-                path.push([rowIndex - 1, columnIndex]);
-                step = nextStep(rowIndex - 1, columnIndex, ++step, path);
-            } else {
-            }
-        } else {
-            --step;
-
-        }
-    }
-    if (!matched) {
         if (columnIndex - 1 >= 0) {
             if (isExist(rowIndex, columnIndex - 1)) { // no parent && left exist
                 path.push([rowIndex, columnIndex - 1]);
-                step = nextStep(rowIndex, columnIndex - 1, ++step, path);
+                step = nextStep(rowIndex, columnIndex - 1, ++step);
             } else {
-                path.splice(-1, 1);
+                // path.splice(-1, step - 1);
+                // path.splice(-1, 1);
+                reset = false;
             }
         } else {
             --step;
-            path.splice(-1, 1);
+            // path.splice(-1, 1);
         }
     }
+    if (!matched) {
+        if (rowIndex - 1 >= 0) {
+            if (isExist(rowIndex - 1, columnIndex)) { // parent exist
+                if (reset) {
+                    path.push([rowIndex + 1, columnIndex], [rowIndex, columnIndex]);
+
+                    // path.push([rowIndex, columnIndex]);
+                }
+                path.push([rowIndex - 1, columnIndex]);
+                step = nextStep(rowIndex - 1, columnIndex, ++step);
+            } else {
+                path = [];
+                reset = true;
+            }
+        } else {
+            --step;
+        }
+    }
+
     return step;
 };
 const isExist = (rowIndex, columnIndex) => cleared[rowIndex].includes(columnIndex);
 // const isExist = (rowIndex, columnIndex) => question[rowIndex][columnIndex];
 const total = nextStep(selected.row, selected.column, 0, []);
 console.log(selected, cleared);
-console.log("total: ", total);
+console.log("total: ", total, "path: ", path);
