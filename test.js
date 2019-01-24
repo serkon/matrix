@@ -28,11 +28,11 @@
 
 var question = [
     [1, 1, 1, 1, 1],
-    [1, 0, 0, 1, 1],
-    [0, 1, 1, 1, 1],
-    [0, 1, 1, 1, 1],
-    [0, 0, 1, 1, 1],
-    [0, 0, 0, 1, 1],
+    [1, 1, 0, 0, 1],
+    [0, 1, 0, 1, 1],
+    [0, 1, 0, 1, 1],
+    [0, 1, 0, 1, 1],
+    [0, 1, 0, 1, 1],
     [1, 1, 1, 9, 1]
 ];
 const selected = question.slice(0).reduce((r, row, rowIndex, arr) => {
@@ -53,6 +53,16 @@ const nextStep = (rowIndex, columnIndex, route) => {
     }
 
     let remove = 0;
+
+    // parent
+    if (!matched) {
+        if (rowIndex -1 >= 0 && isExist(rowIndex - 1, columnIndex)) {
+            if (!found(rowIndex - 1, columnIndex)) {
+                nextStep(rowIndex - 1, columnIndex);
+            }
+        }
+    }
+
     // left
     if (!matched) {
         if (isExist(rowIndex, columnIndex - 1)) {
@@ -61,14 +71,9 @@ const nextStep = (rowIndex, columnIndex, route) => {
             }
         }
     }
-    // parent
-    if (!matched) {
-        if (isExist(rowIndex - 1, columnIndex)) {
-            if (!found(rowIndex - 1, columnIndex)) {
-                nextStep(rowIndex - 1, columnIndex);
-            }
-        }
-    }
+
+
+
     // right
     if (!matched) {
         if (isExist(rowIndex, columnIndex + 1)) { // no parent && left exist
@@ -81,9 +86,10 @@ const nextStep = (rowIndex, columnIndex, route) => {
     if (!matched) {
         let index = path.findIndex(item => item[0] === rowIndex && item[1] === columnIndex);
         path.splice(index, 1);
+        console.log('remove: ', remove, ' index: ', rowIndex, columnIndex);
     }
 
-    console.log('remove: ', remove, ' index: ', rowIndex, columnIndex);
+
 };
 const found = (rowIndex, columnIndex) => {
     return path.findIndex(item => item[0] === rowIndex && item[1] === columnIndex) >= 0;
