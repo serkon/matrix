@@ -1,11 +1,8 @@
 var question = [
-    [1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 1],
-    [0, 0, 0, 1, 1],
-    [1, 1, 1, 1, 1],
     [1, 1, 1, 0, 1],
-    [1, 1, 1, 1, 1],
-    [1, 1, 1, 1, 9],
+    [1, 0, 1, 1, 1],
+    [0, 0, 0, 0, 1],
+    [0, 9, 1, 1, 1],
 ];
 
 // güzel örnek
@@ -46,6 +43,9 @@ const cleared = question.map(row => row.reduce((r, v, i) => v >= 1 ? (r.push(i),
 let matched = false;
 let path = [];
 let reset = false;
+const found = (rowIndex, columnIndex) => {
+    return path.findIndex(item => item[0] === rowIndex && item[1] === columnIndex) >= 0;
+};
 const nextStep = (rowIndex, columnIndex, step) => {
     console.log(rowIndex, columnIndex, step);
     if (rowIndex === 0 && columnIndex === 0) {
@@ -54,7 +54,7 @@ const nextStep = (rowIndex, columnIndex, step) => {
     }
     if (!matched) {
         if (columnIndex - 1 >= 0) {
-            if (isExist(rowIndex, columnIndex - 1)) { // no parent && left exist
+            if (isExist(rowIndex, columnIndex - 1) && !found(rowIndex, columnIndex-1)) { // no parent && left exist
                 path.push([rowIndex, columnIndex - 1]);
                 step = nextStep(rowIndex, columnIndex - 1, ++step);
             } else {
@@ -86,6 +86,16 @@ const nextStep = (rowIndex, columnIndex, step) => {
             --step;
         }
     }
+    if (!matched) {
+        if (isExist(rowIndex, columnIndex + 1) && !found(rowIndex, columnIndex+1)) { // no parent && left exist
+            path.push([rowIndex, columnIndex + 1]);
+            step = nextStep(rowIndex, columnIndex + 1, ++step);
+        }
+    }
+
+
+
+
 
     return step;
 };
