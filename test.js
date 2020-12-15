@@ -1,3 +1,10 @@
+/*
+Amaç aşağıdaki matrix örneğinde başlangıç noktası 9 olan index'den başlamak üzere
+yukarı, sağa, sola hangi yönde gidersem (0,0) index'ine gelirim.
+Bu yolu giderken 1 lere uğrayabilirsin, 0'lara uğrayamazsın.
+Buna göre gitmek gereken indexleri  console'a basar.
+*/
+
 // güzel örnek
 // var question = [
 //     [1, 0, 1, 1, 1],
